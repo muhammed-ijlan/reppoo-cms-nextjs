@@ -1,6 +1,6 @@
 import type { CSSObject, TypographyVariantsOptions } from '@mui/material/styles';
 import { createTheme as getTheme } from '@mui/material/styles';
-
+import {manrope} from "./fonts"
 export type FontStyleExtend = {
   fontWeightSemiBold: CSSObject['fontWeight'];
   fontSecondaryFamily: CSSObject['fontFamily'];
@@ -14,7 +14,7 @@ export const typography: TypographyVariantsOptions = {
   fontWeightRegular: 400,
   fontWeightMedium: 500,
   fontWeightBold: 700,
-
+fontFamily: manrope.style.fontFamily,
   h1: {
     fontWeight: 700,
     [defaultMuiTheme.breakpoints.up('xs')]: {
@@ -250,7 +250,7 @@ export const typography: TypographyVariantsOptions = {
       textAlign: 'left',
     },
     [defaultMuiTheme.breakpoints.up('lg')]: {
-      fontSize: '16px',
+      fontSize: '18px',
       lineHeight: '28px',
       letterSpacing: '3%',
       textAlign: 'left',
@@ -277,7 +277,7 @@ export const typography: TypographyVariantsOptions = {
       textAlign: 'left',
     },
     [defaultMuiTheme.breakpoints.up('lg')]: {
-      fontSize: '14px',
+      fontSize: '16px',
       lineHeight: '26px',
       letterSpacing: '3%',
       textAlign: 'left',

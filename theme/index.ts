@@ -1,16 +1,9 @@
-import { createTheme } from '@mui/material/styles';
-import { typography } from './typography';
-import { manrope } from './fonts';
+// src/theme/index.ts
+import { createTheme } from "@mui/material/styles";
+import { components } from "./components";
+import {typography} from "./typography";
 
-const theme = createTheme({
-  typography: {
-    ...typography,
-    fontFamily: manrope.style.fontFamily,
-  },
-  palette: {
-    primary: { main: '#1976d2' },
-    secondary: { main: '#9c27b0' },
-  },
+export const theme = createTheme({
+  typography,
+  components,
 });
-
-export default theme;
