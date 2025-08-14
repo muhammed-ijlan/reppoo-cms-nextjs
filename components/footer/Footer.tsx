@@ -9,14 +9,15 @@ const Footer = () => {
     <Container maxWidth="lg">
       <Stack my={6}>
         <Stack
-          direction={"row"}
+          direction={{ xs: "column", md: "row" }}
           justifyContent="space-between"
           alignItems="center"
           mb={4}
+          gap={2}
         >
           <Stack gap={2}>
             <Image src={logo} alt="logo" width={125} height={34} />
-            <Typography variant="body2" width={503}>
+            <Typography variant="body2" width={{ xs: "100%", md: 503 }}>
               innovative health assistant app that leverages artificial
               intelligence to provide personalized wellness recommendations.
               <br />

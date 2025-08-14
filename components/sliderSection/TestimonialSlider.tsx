@@ -61,10 +61,10 @@ export default function TestimonialSlider() {
   return (
     <Box
       sx={{
-        width: "760px",
+        width: { xs: "100%", md: "760px" },
         mx: "auto",
-        py: 6,
-        px: 2,
+        py: { xs: 2, md: 6 },
+        px: { xs: 0, md: 2 },
         position: "relative",
       }}
     >
@@ -80,9 +80,9 @@ export default function TestimonialSlider() {
             <Paper
               elevation={0}
               sx={{
-                height: "342px",
-                py: 0,
-                px: 11,
+                height: { xs: "auto", md: "342px" },
+                py: { xs: 5, md: 0 },
+                px: { xs: 5, md: 11 },
                 borderRadius: "24px",
                 textAlign: "center",
                 bgcolor: "#fff",
@@ -137,7 +137,13 @@ export default function TestimonialSlider() {
         ))}
       </Swiper>
 
-      <Stack direction="row" spacing={2} mt={3} justifyContent="center">
+      <Stack
+        display={{ xs: "none", sm: "flex" }}
+        direction="row"
+        spacing={2}
+        mt={3}
+        justifyContent="center"
+      >
         {testimonials.map((thumb, i) => (
           <Paper
             elevation={0}
@@ -178,66 +184,69 @@ export default function TestimonialSlider() {
         disabled={isBeginning}
         sx={{
           position: "absolute",
-          left: -50,
-          top: "35%",
-          transform: "translateY(-50%)",
-          width: 44,
-          height: 44,
+          top: { xs: "100%", md: "35%" },
+          left: { xs: "38%", md: -50 },
+          transform: { xs: "none", md: "translateY(-50%)" },
+          width: 40,
+          height: 40,
           borderRadius: "50%",
-          bgcolor: "#fff",
-          border: "1px solid #ddd",
-          color: "#000",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          bgcolor: { xs: "rgba(255,255,255,0.8)", md: "#fff" },
+          backdropFilter: { xs: "blur(8px)", md: "none" },
+          border: {
+            xs: "1px solid rgba(255,255,255,0.3)",
+            md: "1px solid #ddd",
+          },
+          color: { xs: "#000", md: "#000" },
+          boxShadow: {
+            xs: "0 4px 12px rgba(0,0,0,0.15)",
+            md: "0 2px 6px rgba(0,0,0,0.1)",
+          },
           transition: "all 0.3s ease",
           "&:hover": {
-            transform: isBeginning
-              ? "translateY(-50%)"
-              : "translateY(-50%) scale(1.05)",
-            boxShadow: isBeginning
-              ? "0 2px 6px rgba(0,0,0,0.1)"
-              : "0 4px 10px rgba(0,0,0,0.15)",
-            bgcolor: "#fff",
+            transform: {
+              xs: "scale(1.05)",
+              md: "translateY(-50%) scale(1.05)",
+            },
+            bgcolor: { xs: "rgba(255,255,255,0.9)", md: "#fff" },
           },
           ...(isBeginning && {
-            bgcolor: "#E0E0E0",
-            color: "#9E9E9E",
-            border: "1px solid #ccc",
+            opacity: 0.5,
             cursor: "not-allowed",
           }),
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <ArrowBackIos sx={{ fontSize: 16 }} />
       </IconButton>
 
+      {/* Next Button */}
       <IconButton
         onClick={() => swiperRef.current?.slideNext()}
         disabled={isEnd}
         sx={{
           position: "absolute",
-          right: -50,
-          top: "35%",
-          transform: "translateY(-50%)",
-          width: 44,
-          height: 44,
+          top: { xs: "100%", md: "35%" },
+          right: { xs: "38%", md: -50 },
+          transform: { xs: "none", md: "translateY(-50%)" },
+          width: 40,
+          height: 40,
           borderRadius: "50%",
-          bgcolor: "#2D8EFF",
+          bgcolor: { xs: "rgba(45,142,255,0.9)", md: "#2D8EFF" },
+          backdropFilter: { xs: "blur(8px)", md: "none" },
           color: "#fff",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+          boxShadow: {
+            xs: "0 4px 12px rgba(0,0,0,0.2)",
+            md: "0 2px 6px rgba(0,0,0,0.15)",
+          },
           transition: "all 0.3s ease",
           "&:hover": {
-            transform: isEnd
-              ? "translateY(-50%)"
-              : "translateY(-50%) scale(1.05)",
-            boxShadow: isEnd
-              ? "0 2px 6px rgba(0,0,0,0.15)"
-              : "0 4px 10px rgba(0,0,0,0.25)",
-            bgcolor: "#1E7AEF",
+            transform: {
+              xs: "scale(1.05)",
+              md: "translateY(-50%) scale(1.05)",
+            },
+            bgcolor: { xs: "rgba(30,122,239,0.95)", md: "#1E7AEF" },
           },
           ...(isEnd && {
-            bgcolor: "#E0E0E0",
+            bgcolor: { xs: "rgba(224,224,224,0.8)", md: "#E0E0E0" },
             color: "#9E9E9E",
             cursor: "not-allowed",
           }),

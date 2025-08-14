@@ -17,7 +17,6 @@ interface FaqNode {
 const Faq = () => {
   const [expanded, setExpanded] = useState<number | false>(0);
 
-  // Sample FAQ data
   const faqs: FaqNode[] = [
     {
       title: "What features does the AI Health Assistant offer?",
@@ -98,7 +97,9 @@ const Faq = () => {
                 </Stack>
               </AccordionSummary>
               <AccordionDetails
-                sx={{ padding: { xs: "0", md: "0px 20px 25px 0px" } }}
+                sx={{
+                  padding: { xs: "0px 20px 25px 0px", md: "0px 20px 25px 0px" },
+                }}
               >
                 <Typography
                   component="div"

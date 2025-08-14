@@ -1,144 +1,165 @@
+"use client";
 import { Box, Stack } from "@mui/material";
-import React from "react";
-
+import React, { useEffect, useRef } from "react";
 import phone from "@/public/images/phone-app.png";
 import leftScreen from "@/public/images/left-screen.png";
 import rightScreen from "@/public/images/right-screen.png";
-
-
 import Image from "next/image";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const AppScreenLayout = () => {
-  return (
+  const leftRef = useRef(null);
+  const phoneRef = useRef(null);
+  const rightRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(leftRef.current, { opacity: 0, x: -100 });
+      gsap.set(rightRef.current, { opacity: 0, x: 100 });
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            end: "bottom center",
+            scrub: false,
+            once: true,
+          },
+        })
+        .from(phoneRef.current, {
+          opacity: 0,
+          y: 80,
+          duration: 1,
+          ease: "power3.out",
+        })
+        .to(
+          leftRef.current,
+          { opacity: 1, x: 0, duration: 1, ease: "power3.out" },
+          "-=0.5"
+        )
+        .to(
+          rightRef.current,
+          { opacity: 1, x: 0, duration: 1, ease: "power3.out" },
+          "-=0.8"
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const ScreenImage = ({
+    imgSrc,
+    bgColor,
+  }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    imgSrc: any;
+    bgColor: string;
+  }) => (
     <Stack
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"space-between"}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ position: "relative", zIndex: 1 }}
     >
       <Stack
-        mt={20}
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
         sx={{
-          width: "100%",
-          height: "100%",
+          width: { xs: 160, sm: 200, md: 400 },
+          height: { xs: 190, sm: 240, md: 482 },
           position: "relative",
+          borderRadius: "50%",
           zIndex: 1,
         }}
       >
-        <Stack
+        <Box
           sx={{
-            width: "400px",
-            height: "481.97px",
-            position: "relative",
+            width: "100%",
+            height: "80%",
+            backgroundColor: bgColor,
+            transform: "rotate(-23.64deg)",
+            filter: "blur(200px)",
             borderRadius: "50%",
+            position: "absolute",
+            top: 0,
+            left: 0,
             zIndex: 1,
           }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              height: "80%",
-              backgroundColor: "#70D9FF",
-              transform: "rotate(-23.64deg)",
-              filter: "blur(276.4px)",
-              borderRadius: "50%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              zIndex: 1,
-            }}
-          />
-
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 2,
-            }}
-          >
-            <Image
-              src={leftScreen}
-              alt="image"
-              width={418}
-              style={{ objectFit: "contain" }}
-            />
-          </Box>
-        </Stack>
-      </Stack>
-      <Image
-        style={{ zIndex: 888 }}
-        src={phone}
-        alt="image"
-        width={512}
-        height={577}
-      />
-      <Stack
-         mt={20}
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        sx={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <Stack
+        />
+        <Box
           sx={{
-            width: "400px",
-            height: "481.97px",
-            position: "relative",
-            borderRadius: "50%",
-            zIndex: 1,
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 2,
           }}
         >
-          <Box
-            sx={{
-              width: "100%",
-              height: "80%",
-              backgroundColor: "#FFE5AA",
-              transform: "rotate(-23.64deg)",
-              filter: "blur(276.4px)",
-              borderRadius: "50%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              zIndex: 1,
-            }}
+          <Image
+            src={imgSrc}
+            alt="screen"
+            width={418}
+            style={{ objectFit: "contain", maxWidth: "100%", height: "auto" }}
           />
-
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 2,
-            }}
-          >
-            <Image
-              src={rightScreen}
-              alt="image"
-              width={418}
-              style={{ objectFit: "contain" }}
-            />
-          </Box>
-        </Stack>
+        </Box>
       </Stack>
     </Stack>
+  );
+
+  return (
+    <Box ref={sectionRef} sx={{ width: "100%" }}>
+      {/* Desktop / Tablet Layout */}
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ display: { xs: "none", md: "flex" } }}
+      >
+        <Stack ref={leftRef} mt={20}>
+          <ScreenImage imgSrc={leftScreen} bgColor="#70D9FF" />
+        </Stack>
+        <Box ref={phoneRef}>
+          <Image
+            src={phone}
+            alt="phone"
+            width={512}
+            height={577}
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        </Box>
+        <Stack ref={rightRef} mt={20}>
+          <ScreenImage imgSrc={rightScreen} bgColor="#FFE5AA" />
+        </Stack>
+      </Stack>
+
+      {/* Mobile Layout */}
+      <Stack
+        direction="column"
+        alignItems="center"
+        spacing={3}
+        sx={{ display: { xs: "flex", md: "none" }, mt: 4 }}
+      >
+        {/* Phone First */}
+        <Box ref={phoneRef}>
+          <Image
+            src={phone}
+            alt="phone"
+            width={300}
+            height={340}
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        </Box>
+
+        {/* Two Screens Side-by-Side */}
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <ScreenImage imgSrc={leftScreen} bgColor="#70D9FF" />
+          <ScreenImage imgSrc={rightScreen} bgColor="#FFE5AA" />
+        </Stack>
+      </Stack>
+    </Box>
   );
 };
 
