@@ -1,8 +1,10 @@
 import { Avatar, AvatarGroup, Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import Image from "next/image";
+import person1 from "@/public/images/person1.jpg"; 
+import person2 from "@/public/images/person2.jpg";
+import person3 from "@/public/images/person3.jpg";
 
-// Importing the Google Play and App Store icons
 import googlePlayIcon from "@/public/images/playstore.png";
 import appStoreIcon from "@/public/images/apple.png";
 
@@ -12,9 +14,9 @@ const ContentSection = () => {
       <Stack gap={3} alignItems={"center"}>
         <Stack direction={"row"} gap={2} alignItems={"center"}>
           <AvatarGroup max={4}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+            <Avatar alt="Remy Sharp" src={person1.src} />
+            <Avatar alt="Travis Howard" src={person2.src} />
+            <Avatar alt="Cindy Baker" src={person3.src} />
           </AvatarGroup>
           <Stack direction={"row"} gap={1} alignItems={"center"}>
             <Typography variant="h6" fontWeight={700} color={"#000000"}>

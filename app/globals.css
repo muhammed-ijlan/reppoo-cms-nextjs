@@ -4,4 +4,6 @@
 }
 body {
     font-family: var(--font-manrope), sans-serif;
+    background-color: #FCFCFD !important;
   }
+

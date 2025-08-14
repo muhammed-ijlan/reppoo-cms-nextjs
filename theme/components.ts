@@ -43,7 +43,7 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
 
       // Tablets / Small Devices (600px–899px)
       "@media (min-width: 600px) and (max-width: 899px)": {
-         maxWidth: "700px",
+        maxWidth: "700px",
       },
 
       // Medium Devices / Tablets (900px–1199px)
@@ -60,7 +60,7 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
         maxWidth: "1350px",
       },
 
-      
+
       "@media (min-width: 1801px) and (max-width: 1800px)": {
         maxWidth: "1350px",
       },
@@ -81,7 +81,7 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
       maxWidth: "100%",
 
       // Extra small mobiles (≤ 360px)
-     
+
       "@media (max-width: 360px)": {
         maxWidth: "320px",
       },
@@ -101,7 +101,7 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
 
       // Medium Devices / Tablets (900px–1199px)
       "@media (min-width: 900px) and (max-width: 1199px)": {
-              maxWidth: "820px",
+        maxWidth: "820px",
       },
 
       // Large Devices / Desktops (1200px–1535px)
@@ -120,7 +120,7 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
       },
 
       "@media (min-width: 1801px) and (max-width: 2499px)": {
-        maxWidth: "1240px",
+        maxWidth: "1340px",
       },
 
       // Ultra-wide Screens (≥ 2500px)
@@ -128,16 +128,16 @@ const MuiContainer: Components<Theme>["MuiContainer"] = {
         maxWidth: "1600px",
       },
 
-      
+
     },
   },
 };
 
-const MuiButton: Components<Theme>["MuiButton"]= {
+const MuiButton: Components<Theme>["MuiButton"] = {
   styleOverrides: {
     root: {
       fontFamily: `${manrope.style.fontFamily} !important`,
-      textTransform: 'none', 
+      textTransform: 'none',
 
     },
   },
