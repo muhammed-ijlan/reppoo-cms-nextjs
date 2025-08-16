@@ -48,7 +48,7 @@ const Menuitems = [
     id: 6,
     title: "Login",
     icon: IconLogin,
-    href: "/dashboard/authentication/login",
+    href: "/login",
   },
 ];
 

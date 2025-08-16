@@ -8,6 +8,7 @@ import logo from "@/public/images/logo.png";
 
 const Navbar = () => {
   const router = useRouter();
+  const isLoggedIn = localStorage.getItem("adminToken");
   return (
     <Stack sx={{ background: "#F9F9F9", width: "100%" }}>
       <Container maxWidth="lg">
@@ -31,7 +32,7 @@ const Navbar = () => {
               color: "black",
             }}
           >
-            Admin Login
+            {isLoggedIn ? "Dashboard" : "Admin Login"}
           </Button>
         </Stack>
       </Container>

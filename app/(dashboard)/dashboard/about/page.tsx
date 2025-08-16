@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -14,6 +13,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import api from "@/app/lib/axiosInstance";
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -28,14 +28,10 @@ const Page = () => {
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        const res = await axios.get("/api/about");
+        const res = await api.get("/about");
         if (res.data.data) setFormData(res.data.data);
       } catch (err: any) {
-        setError(
-          axios.isAxiosError(err)
-            ? err.response?.data?.error || "Failed to fetch about data"
-            : "Error loading data"
-        );
+        setError("Error loading data");
       } finally {
         setFetching(false);
       }
@@ -58,7 +54,7 @@ const Page = () => {
     setSuccess(null);
 
     try {
-      const res = await axios.put("/api/about", formData);
+      const res = await api.put("/about", formData);
 
       setSuccess("About section updated successfully!");
       setFormData(res.data.data);

@@ -19,7 +19,7 @@ import {
   Alert,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
-import axios from "axios";
+import api from "@/app/lib/axiosInstance";
 
 const Page = () => {
   const [testimonials, setTestimonials] = useState<any[]>([]);
@@ -38,7 +38,7 @@ const Page = () => {
   const fetchTestimonials = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/testimonial");
+      const res = await api.get("/testimonial");
       setTestimonials(res.data.data);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to load testimonials");
@@ -89,10 +89,10 @@ const Page = () => {
   const handleSave = async () => {
     try {
       if (currentIndex) {
-        await axios.put(`/api/testimonial/${currentIndex}`, formData);
+        await api.put(`/testimonial/${currentIndex}`, formData);
         setSuccess("Testimonial updated successfully ✅");
       } else {
-        await axios.post("/api/testimonial", formData);
+        await api.post("/testimonial", formData);
         setSuccess("Testimonial created successfully ✅");
       }
       setOpen(false);
@@ -104,7 +104,7 @@ const Page = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`/api/testimonial/${id}`);
+      await api.delete(`/testimonial/${id}`);
       setSuccess("Testimonial deleted successfully ✅");
       fetchTestimonials();
     } catch (err: any) {

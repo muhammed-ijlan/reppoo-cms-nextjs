@@ -21,7 +21,7 @@ import {
   Alert,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/app/lib/axiosInstance";
 
 interface FaqNode {
   _id?: string;
@@ -41,11 +41,10 @@ const Faq = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // ✅ Fetch FAQs from API
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const res = await axios.get("/api/faq");
+        const res = await api.get("/faq");
         setFaqs(res.data.data || []);
       } catch (err: any) {
         setError(err.response?.data?.error || "Failed to fetch FAQs");
@@ -77,7 +76,6 @@ const Faq = () => {
     setSuccess(null);
   };
 
-  // ✅ Save or Update FAQ via API
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -85,18 +83,13 @@ const Faq = () => {
 
     try {
       if (editIndex !== null && faqs[editIndex]._id) {
-        // Update existing FAQ
-        const res = await axios.put(
-          `/api/faq/${faqs[editIndex]._id}`,
-          formData
-        );
+        const res = await api.put(`/faq/${faqs[editIndex]._id}`, formData);
         const updatedFaqs = [...faqs];
         updatedFaqs[editIndex] = res.data.data;
         setFaqs(updatedFaqs);
         setSuccess("FAQ updated successfully!");
       } else {
-        // Add new FAQ
-        const res = await axios.post("/api/faq", formData);
+        const res = await api.post("/faq", formData);
         setFaqs([...faqs, res.data.data]);
         setSuccess("FAQ created successfully!");
       }
@@ -108,12 +101,11 @@ const Faq = () => {
     }
   };
 
-  // ✅ Delete FAQ
   const handleDelete = async (index: number) => {
     const faqId = faqs[index]._id;
     if (!faqId) return;
     try {
-      await axios.delete(`/api/faq/${faqId}`);
+      await api.delete(`/faq/${faqId}`);
       setFaqs(faqs.filter((_, i) => i !== index));
       setSuccess("FAQ deleted successfully!");
     } catch (err: any) {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   Avatar,
   Box,
@@ -12,22 +11,37 @@ import {
 } from "@mui/material";
 
 import { IconUser } from "@tabler/icons-react";
+import api from "@/app/lib/axiosInstance";
+import { useRouter } from "next/navigation";
 
 const Profile = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClick2 = (event: any) => {
+  const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
+  const router = useRouter();
+  const handleClick2 = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl2(event.currentTarget);
   };
   const handleClose2 = () => {
     setAnchorEl2(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      await api.delete("/auth/logout", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.removeItem("adminToken");
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   return (
     <Box>
       <IconButton
         size="large"
-        aria-label="show 11 new notifications"
+        aria-label="profile menu"
         color="inherit"
         aria-controls="msgs-menu"
         aria-haspopup="true"
@@ -41,15 +55,10 @@ const Profile = () => {
         <Avatar
           src="/images/profile/user-1.jpg"
           alt="image"
-          sx={{
-            width: 35,
-            height: 35,
-          }}
+          sx={{ width: 35, height: 35 }}
         />
       </IconButton>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
+
       <Menu
         id="msgs-menu"
         anchorEl={anchorEl2}
@@ -59,9 +68,7 @@ const Profile = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         sx={{
-          "& .MuiMenu-paper": {
-            width: "200px",
-          },
+          "& .MuiMenu-paper": { width: "200px" },
         }}
       >
         <MenuItem>
@@ -70,13 +77,13 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>My Profile</ListItemText>
         </MenuItem>
+
         <Box mt={1} py={1} px={2}>
           <Button
-            href="/authentication/login"
             variant="outlined"
             color="primary"
-            component={Link}
             fullWidth
+            onClick={handleLogout}
           >
             Logout
           </Button>

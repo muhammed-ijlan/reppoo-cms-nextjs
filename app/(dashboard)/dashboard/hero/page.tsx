@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,6 +13,8 @@ import {
   Typography,
   Alert,
 } from "@mui/material";
+import axios from "axios";
+import api from "@/app/lib/axiosInstance";
 
 const AdminForm = () => {
   const [formData, setFormData] = useState({
@@ -37,21 +40,19 @@ const AdminForm = () => {
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        const res = await fetch("/api/hero");
-        const data = await res.json();
-        if (res.ok) {
-          setFormData({
-            title: data.data.title || "",
-            subtitle: data.data.subtitle || "",
-            leftImage: null,
-            rightImage: null,
-            mainImage: null,
-          });
-        }
+        const { data } = await api.get("/hero");
+        setFormData({
+          title: data.data.title || "",
+          subtitle: data.data.subtitle || "",
+          leftImage: null,
+          rightImage: null,
+          mainImage: null,
+        });
       } catch (err) {
         console.error("Failed to fetch Hero data", err);
       }
     };
+
     fetchHeroData();
   }, []);
 
@@ -69,22 +70,21 @@ const AdminForm = () => {
       if (formData.mainImage) data.append("mainImage", formData.mainImage);
       if (formData.rightImage) data.append("rightImage", formData.rightImage);
 
-      const res = await fetch("/api/hero", {
-        method: "POST",
-        body: data,
+      const res = await api.post("/hero", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const result = await res.json();
-
-      if (res.ok) {
-        setSuccessMessage(
-          result.message || "Hero section updated successfully!"
-        );
+      setSuccessMessage(
+        res.data.message || "Hero section updated successfully!"
+      );
+    } catch (err: any) {
+      if (err.response?.data?.message) {
+        setErrorMessage(err.response.data.message);
       } else {
-        setErrorMessage(result.message || "Failed to update hero section.");
+        setErrorMessage("Something went wrong. Please try again.");
       }
-    } catch (err) {
-      setErrorMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -96,6 +96,7 @@ const AdminForm = () => {
         <Typography variant="h5" fontWeight={600} gutterBottom mb={2}>
           HERO Section – Update Content
         </Typography>
+
         {errorMessage && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {errorMessage}
@@ -130,74 +131,30 @@ const AdminForm = () => {
             />
 
             <Grid container spacing={2}>
-              <Grid size={{ xs: 4 }}>
-                <Button
-                  variant="outlined"
-                  component="label"
-                  fullWidth
-                  sx={{ height: "100px" }}
-                >
-                  Upload Left Image
-                  <input
-                    type="file"
-                    name="leftImage"
-                    hidden
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                </Button>
-                {formData.leftImage && (
-                  <Typography variant="body2" mt={1} textAlign="center">
-                    {formData.leftImage.name}
-                  </Typography>
-                )}
-              </Grid>
-
-              <Grid size={{ xs: 4 }}>
-                <Button
-                  variant="outlined"
-                  component="label"
-                  fullWidth
-                  sx={{ height: "100px" }}
-                >
-                  Upload Main Image
-                  <input
-                    type="file"
-                    name="mainImage"
-                    hidden
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                </Button>
-                {formData.mainImage && (
-                  <Typography variant="body2" mt={1} textAlign="center">
-                    {formData.mainImage.name}
-                  </Typography>
-                )}
-              </Grid>
-
-              <Grid size={{ xs: 4 }}>
-                <Button
-                  variant="outlined"
-                  component="label"
-                  fullWidth
-                  sx={{ height: "100px" }}
-                >
-                  Upload Right Image
-                  <input
-                    type="file"
-                    name="rightImage"
-                    hidden
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                </Button>
-                {formData.rightImage && (
-                  <Typography variant="body2" mt={1} textAlign="center">
-                    {formData.rightImage.name}
-                  </Typography>
-                )}
-              </Grid>
+              {["leftImage", "mainImage", "rightImage"].map((img, idx) => (
+                <Grid size={{ xs: 4 }} key={idx}>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    fullWidth
+                    sx={{ height: "100px" }}
+                  >
+                    Upload {img.replace("Image", " Image")}
+                    <input
+                      type="file"
+                      name={img}
+                      hidden
+                      accept="image/*"
+                      onChange={handleChange}
+                    />
+                  </Button>
+                  {formData[img as keyof typeof formData] && (
+                    <Typography variant="body2" mt={1} textAlign="center">
+                      {(formData[img as keyof typeof formData] as File).name}
+                    </Typography>
+                  )}
+                </Grid>
+              ))}
             </Grid>
 
             <Box textAlign="right">
