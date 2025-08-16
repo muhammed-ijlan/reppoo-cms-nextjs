@@ -12,13 +12,22 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.1",
+    "@mui/lab": "^7.0.0-beta.16",
     "@mui/material": "^7.3.1",
+    "@tabler/icons-react": "^3.34.1",
+    "apexcharts": "^5.3.3",
+    "axios": "^1.11.0",
     "gsap": "^3.13.0",
+    "lodash": "^4.17.21",
     "minimal-shared": "^1.0.15",
+    "mongoose": "^8.17.1",
     "next": "15.4.6",
     "react": "19.1.0",
+    "react-apexcharts": "^1.7.0",
     "react-dom": "19.1.0",
-    "swiper": "^11.2.10"
+    "react-mui-sidebar": "^1.6.3",
+    "swiper": "^11.2.10",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
