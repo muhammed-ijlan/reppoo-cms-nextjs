@@ -3,13 +3,13 @@ import Testimonial from "@/app/models/testimonial";
 import { z } from "zod";
 import { successResponse, errorResponse } from "@/app/lib/apiResponse";
 
-
 export async function GET(
     req: Request,
-    { params: { id } }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectToDB();
+        const { id } = await context.params; // 👈 await params
         const testimonial = await Testimonial.findById(id);
         if (!testimonial) {
             return errorResponse("Testimonial not found", 404);
@@ -22,22 +22,28 @@ export async function GET(
 
 export async function PUT(
     req: Request,
-    { params: { id } }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectToDB();
+        const { id } = await context.params;
         const body = await req.json();
-        const parsed = z.object({
-            name: z.string().min(1, "Name is required"),
-            role: z.string().min(1, "Role is required"),
-            text: z.string().min(1, "Text is required"),
-        }).safeParse(body);
+
+        const parsed = z
+            .object({
+                name: z.string().min(1, "Name is required"),
+                role: z.string().min(1, "Role is required"),
+                text: z.string().min(1, "Text is required"),
+            })
+            .safeParse(body);
+
         if (!parsed.success) {
             return errorResponse("Validation failed", 400, parsed.error.issues.map(err => ({
                 field: err.path[0],
                 message: err.message,
             })));
         }
+
         const testimonial = await Testimonial.findByIdAndUpdate(id, parsed.data, { new: true });
         if (!testimonial) {
             return errorResponse("Testimonial not found", 404);
@@ -50,10 +56,11 @@ export async function PUT(
 
 export async function DELETE(
     req: Request,
-    { params: { id } }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectToDB();
+        const { id } = await context.params;
         const testimonial = await Testimonial.findByIdAndDelete(id);
         if (!testimonial) {
             return errorResponse("Testimonial not found", 404);
