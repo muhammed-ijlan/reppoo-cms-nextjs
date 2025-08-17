@@ -17,7 +17,7 @@ const createToken = (admin: any) => {
 
 export async function POST(
     req: NextRequest,
-    context: { params: { action: string } }
+    context: { params: Promise<{ action: string }> }
 ) {
     try {
         await connectToDB();
