@@ -9,23 +9,26 @@ import { jwtVerify } from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createToken = (admin: any) => {
     return jwt.sign({ id: admin._id, email: admin.email }, JWT_SECRET, {
         expiresIn: "7d",
     });
 };
 
-export async function POST(req: NextRequest, { params }: { params: { action: string } }) {
+export async function POST(
+    req: NextRequest,
+    context: { params: { action: string } }
+) {
     try {
         await connectToDB();
-        const { action } = params;
+        const { action } = await context.params;
         const body = await req.json();
         const { fullname, email, password } = body;
 
         if (!email || !password) {
             return errorResponse("All fields are required", 400);
         }
+
         if (action === "register") {
             const existingAdmin = await Admin.findOne({ email });
             if (existingAdmin) {
@@ -43,10 +46,8 @@ export async function POST(req: NextRequest, { params }: { params: { action: str
 
             await admin.save();
 
-
             return successResponse({ admin }, "Admin registered successfully");
         }
-
 
         if (action === "login") {
             const admin = await Admin.findOne({ email });
@@ -79,13 +80,18 @@ export async function DELETE(req: NextRequest) {
         await connectToDB();
 
         const authHeader = req.headers.get("authorization");
-        if (!authHeader?.startsWith("Bearer ")) return errorResponse("Unauthorized", 401);
+        if (!authHeader?.startsWith("Bearer ")) {
+            return errorResponse("Unauthorized", 401);
+        }
 
         const token = authHeader.split(" ")[1];
 
         let payload: any;
         try {
-            const verified = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
+            const verified = await jwtVerify(
+                token,
+                new TextEncoder().encode(JWT_SECRET)
+            );
             payload = verified.payload;
         } catch {
             return errorResponse("Unauthorized: Invalid token", 401);
@@ -103,5 +109,3 @@ export async function DELETE(req: NextRequest) {
         return errorResponse("Something went wrong", 500, (err as Error).message);
     }
 }
-
-
