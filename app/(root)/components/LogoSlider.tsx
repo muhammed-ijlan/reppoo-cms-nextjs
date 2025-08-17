@@ -1,7 +1,6 @@
 import { Box, Container } from "@mui/material";
 import React, { useRef } from "react";
 import CustomSlider from "./CustomSlider";
-import Image from "next/image";
 
 const LogoSlider = () => {
   const scrollRef = useRef<HTMLDivElement>(
@@ -9,11 +8,11 @@ const LogoSlider = () => {
   ) as React.RefObject<HTMLDivElement>;
 
   const items = [
-    { id: 1, src: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 2, src: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 3, src: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 4, src: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 5, src: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 1, logo: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 2, logo: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 3, logo: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 4, logo: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 5, logo: "/images/sliderLogo.png", alt: "Logo 1" },
   ];
   return (
     <Container maxWidth="lg" sx={{ my: 10 }}>
@@ -22,7 +21,7 @@ const LogoSlider = () => {
           <Box
             component={"img"}
             key={item.id}
-            src={item.src}
+            src={item.logo}
             alt={item.alt}
             width={200}
             height={40}
