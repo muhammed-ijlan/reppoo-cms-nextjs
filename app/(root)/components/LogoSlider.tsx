@@ -8,11 +8,11 @@ const LogoSlider = () => {
   ) as React.RefObject<HTMLDivElement>;
 
   const items = [
-    { id: 1, logo: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 2, logo: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 3, logo: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 4, logo: "/images/sliderLogo.png", alt: "Logo 1" },
-    { id: 5, logo: "/images/sliderLogo.png", alt: "Logo 1" },
+    { id: 1, logo: "/images/sliderlogo.png", alt: "Logo 1" },
+    { id: 2, logo: "/images/sliderlogo.png", alt: "Logo 1" },
+    { id: 3, logo: "/images/sliderlogo.png", alt: "Logo 1" },
+    { id: 4, logo: "/images/sliderlogo.png", alt: "Logo 1" },
+    { id: 5, logo: "/images/sliderlogo.png", alt: "Logo 1" },
   ];
   return (
     <Container maxWidth="lg" sx={{ my: 10 }}>
