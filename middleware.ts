@@ -10,6 +10,9 @@ export async function middleware(req: NextRequest) {
     if (url.pathname.startsWith("/api/auth")) {
         return NextResponse.next();
     }
+    if (url.pathname.startsWith("/api/public")) {
+        return NextResponse.next();
+    }
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

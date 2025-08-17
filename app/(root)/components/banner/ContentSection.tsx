@@ -18,9 +18,18 @@ import appStoreIcon from "@/public/images/apple.png";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+interface HeroData {
+  _id: string;
+  title: string;
+  subtitle: string;
+  leftImage: string;
+  rightImage: string;
+  mainImage: string;
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
-const ContentSection = () => {
+const ContentSection = ({ data }: { data: HeroData }) => {
   const sectionRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -142,7 +151,7 @@ const ContentSection = () => {
             lineHeight: 1.2,
           }}
         >
-          Your AI Health Coach
+          {data.title}
         </Typography>
 
         <Typography
@@ -153,8 +162,7 @@ const ContentSection = () => {
             maxWidth: "600px",
           }}
         >
-          Transform your wellness journey with personalized AI-powered guidance
-          that adapts to your unique needs.
+          {data.subtitle}
         </Typography>
 
         {/* Buttons */}

@@ -1,14 +1,20 @@
 "use client";
 import { Button, Container, Stack } from "@mui/material";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import logo from "@/public/images/logo.png";
 
 const Navbar = () => {
   const router = useRouter();
-  const isLoggedIn = localStorage.getItem("adminToken");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    setIsLoggedIn(!!token);
+  }, []);
+
   return (
     <Stack sx={{ background: "#F9F9F9", width: "100%" }}>
       <Container maxWidth="lg">
@@ -20,7 +26,7 @@ const Navbar = () => {
         >
           <Image src={logo} width={125} height={34} alt="logo" />
           <Button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(isLoggedIn ? "/dashboard" : "/login")}
             sx={{
               width: "166px",
               height: "55px",

@@ -1,3 +1,5 @@
+"use client";
+
 import { Add, Remove } from "@mui/icons-material";
 import {
   Accordion,
@@ -7,38 +9,45 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "@/app/lib/axiosInstance"; // ✅ your axios instance
 
 interface FaqNode {
+  _id: string;
   title: string;
   content: string;
 }
 
 const Faq = () => {
   const [expanded, setExpanded] = useState<number | false>(0);
+  const [faqs, setFaqs] = useState<FaqNode[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqs: FaqNode[] = [
-    {
-      title: "What features does the AI Health Assistant offer?",
-      content:
-        "<p>Experience the future of personalized health and wellness before everyone else. Join our exclusive early access program and help shape the future of AI-powered health coaching.</p>",
-    },
-    {
-      title: "Is the app customizable to my needs?",
-      content:
-        "<p>Experience the future of personalized health and wellness before everyone else. Join our exclusive early access program and help shape the future of AI-powered health coaching.</p>",
-    },
-    {
-      title: "How can I contact support?",
-      content:
-        "<p>You can reach our support team at support@example.com or via live chat.</p>",
-    },
-  ];
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const res = await api.get("/public/faq");
+        if (res.data.success) {
+          setFaqs(res.data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch FAQs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   const handleChange =
     (index: number) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? index : false);
     };
+
+  if (loading) {
+    return <Typography>Loading FAQs...</Typography>;
+  }
 
   return (
     <Stack gap={3} bgcolor={"#ffffff"} px={1}>
@@ -47,7 +56,7 @@ const Faq = () => {
           const isActive = expanded === index;
           return (
             <Accordion
-              key={index}
+              key={faq._id}
               expanded={isActive}
               onChange={handleChange(index)}
               disableGutters

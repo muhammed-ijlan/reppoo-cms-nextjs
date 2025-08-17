@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -8,6 +8,7 @@ import {
   IconButton,
   Stack,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,48 +16,62 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import type { Swiper as SwiperType } from "swiper";
+import api from "@/app/lib/axiosInstance";
 
-const testimonials = [
-  {
-    text: `"I've tried countless health apps, but none come close to this. 
-    The AI truly understands my needs—it suggested daily routines and nutrition tips that actually fit my lifestyle. 
-    Within weeks, I felt more energized, slept better, and became more mindful. It's like having a personal wellness coach in my pocket."`,
-    name: "Ava L.",
-    role: "Marketing Executive",
-    subtitle: "Empowered by AI Wellness Journeys",
-    avatarColor: "#D9A188",
-  },
-  {
-    text: `"I've tried countless health apps, but none come close to this. 
-    The AI truly understands my needs—it suggested daily routines and nutrition tips that actually fit my lifestyle. 
-    Within weeks, I felt more energized, slept better, and became more mindful. It's like having a personal wellness coach in my pocket."`,
-    name: "Namo Serlina",
-    role: "CEO Delego",
-    subtitle: "Founder of Healthy Mindset",
-    avatarColor: "#E7C4B5",
-  },
-  {
-    text: `"I've tried countless health apps, but none come close to this. 
-    The AI truly understands my needs—it suggested daily routines and nutrition tips that actually fit my lifestyle. 
-    Within weeks, I felt more energized, slept better, and became more mindful. It's like having a personal wellness coach in my pocket."`,
-    name: "Namo Serlina",
-    role: "CEO Delego",
-    subtitle: "Changing lives with AI",
-    avatarColor: "#E7C4B5",
-  },
-];
+interface Testimonial {
+  _id: string;
+  text: string;
+  name: string;
+  role: string;
+  subtitle: string;
+  avatarColor?: string;
+}
 
 export default function TestimonialSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await api.get("/public/testimonial");
+        if (res.data.success) {
+          setTestimonials(res.data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch testimonials:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
+  }, []);
 
   const handleSlideChange = (swiper: SwiperType) => {
     setActiveIndex(swiper.activeIndex);
     setIsBeginning(swiper.isBeginning);
     setIsEnd(swiper.isEnd);
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" py={6}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!testimonials.length) {
+    return (
+      <Box display="flex" justifyContent="center" py={6}>
+        <Typography>No testimonials found.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -76,7 +91,7 @@ export default function TestimonialSlider() {
         speed={500}
       >
         {testimonials.map((item, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={item._id || index}>
             <Paper
               elevation={0}
               sx={{
@@ -115,7 +130,11 @@ export default function TestimonialSlider() {
                 alignItems="center"
               >
                 <Avatar
-                  sx={{ bgcolor: item.avatarColor, width: 54, height: 54 }}
+                  sx={{
+                    bgcolor: item.avatarColor || "#ccc",
+                    width: 54,
+                    height: 54,
+                  }}
                 >
                   {item.name.charAt(0)}
                 </Avatar>
@@ -147,7 +166,7 @@ export default function TestimonialSlider() {
         {testimonials.map((thumb, i) => (
           <Paper
             elevation={0}
-            key={i}
+            key={thumb._id || i}
             onClick={() => swiperRef.current?.slideTo(i)}
             sx={{
               width: "240px",
@@ -164,7 +183,13 @@ export default function TestimonialSlider() {
               opacity: activeIndex === i ? "100%" : "70%",
             }}
           >
-            <Avatar sx={{ bgcolor: thumb.avatarColor, width: 54, height: 54 }}>
+            <Avatar
+              sx={{
+                bgcolor: thumb.avatarColor || "#ccc",
+                width: 54,
+                height: 54,
+              }}
+            >
               {thumb.name.charAt(0)}
             </Avatar>
             <Box>
@@ -191,34 +216,23 @@ export default function TestimonialSlider() {
           height: 40,
           borderRadius: "50%",
           bgcolor: { xs: "rgba(255,255,255,0.8)", md: "#fff" },
-          backdropFilter: { xs: "blur(8px)", md: "none" },
           border: {
             xs: "1px solid rgba(255,255,255,0.3)",
             md: "1px solid #ddd",
           },
-          color: { xs: "#000", md: "#000" },
-          boxShadow: {
-            xs: "0 4px 12px rgba(0,0,0,0.15)",
-            md: "0 2px 6px rgba(0,0,0,0.1)",
-          },
-          transition: "all 0.3s ease",
+          color: "#000",
           "&:hover": {
             transform: {
               xs: "scale(1.05)",
               md: "translateY(-50%) scale(1.05)",
             },
-            bgcolor: { xs: "rgba(255,255,255,0.9)", md: "#fff" },
           },
-          ...(isBeginning && {
-            opacity: 0.5,
-            cursor: "not-allowed",
-          }),
+          ...(isBeginning && { opacity: 0.5, cursor: "not-allowed" }),
         }}
       >
         <ArrowBackIos sx={{ fontSize: 16 }} />
       </IconButton>
 
-      {/* Next Button */}
       <IconButton
         onClick={() => swiperRef.current?.slideNext()}
         disabled={isEnd}
@@ -231,19 +245,12 @@ export default function TestimonialSlider() {
           height: 40,
           borderRadius: "50%",
           bgcolor: { xs: "rgba(45,142,255,0.9)", md: "#2D8EFF" },
-          backdropFilter: { xs: "blur(8px)", md: "none" },
           color: "#fff",
-          boxShadow: {
-            xs: "0 4px 12px rgba(0,0,0,0.2)",
-            md: "0 2px 6px rgba(0,0,0,0.15)",
-          },
-          transition: "all 0.3s ease",
           "&:hover": {
             transform: {
               xs: "scale(1.05)",
               md: "translateY(-50%) scale(1.05)",
             },
-            bgcolor: { xs: "rgba(30,122,239,0.95)", md: "#1E7AEF" },
           },
           ...(isEnd && {
             bgcolor: { xs: "rgba(224,224,224,0.8)", md: "#E0E0E0" },
