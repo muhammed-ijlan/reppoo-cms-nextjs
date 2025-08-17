@@ -147,13 +147,19 @@ const AppScreenLayout = ({ data }: { data: HeroData }) => {
       </Stack>
 
       <Stack
-        direction="column"
         alignItems="center"
         spacing={3}
-        sx={{ display: { xs: "flex", md: "none" }, mt: 4 }}
+        sx={{
+          display: {
+            xs: "flex",
+            flexDirection: "column",
+            md: "none",
+          },
+          mt: 4,
+        }}
       >
         {data.mainImage && (
-          <Box ref={phoneRef}>
+          <Box sx={{ display: { xs: "block", sm: "none" } }} ref={phoneRef}>
             <Image
               src={data.mainImage}
               alt="phone"
@@ -166,6 +172,17 @@ const AppScreenLayout = ({ data }: { data: HeroData }) => {
 
         <Stack direction="row" spacing={2} justifyContent="center">
           <ScreenImage imgSrc={data.leftImage} bgColor="#70D9FF" />
+          {data.mainImage && (
+            <Box sx={{ display: { xs: "none", sm: "flex" } }} ref={phoneRef}>
+              <Image
+                src={data.mainImage}
+                alt="phone"
+                width={300}
+                height={340}
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
+            </Box>
+          )}
           <ScreenImage imgSrc={data.rightImage} bgColor="#FFE5AA" />
         </Stack>
       </Stack>
